@@ -205,9 +205,6 @@ Here, we check that we can reproduce the authors' results.
       out <- matrix(NA,nrow = nrow(combs),ncol = 5)
       for(i in 1:nrow(combs)){
         out[i,] <- Sens(tab,combs[i,1],combs[i,2],combs[i,3])
-        if(i %% 1000 == 0){
-          print(i)
-        }
       }
       out <- as.data.frame(out)
       names(out) <- c("prevalence","or.ut","or.uy","or.mh","p")
@@ -218,41 +215,13 @@ Here, we check that we can reproduce the authors' results.
       out
     }
 
-We ran the sensitivity analysis for a range of confounder-naltrexone
+We run the sensitivity analysis for a range of confounder-naltrexone
 odds ratios between 1 and 8; a range of confounder-relapse odds ratios
 between 1 and 1/8; and confounder prevalences in the buprenorphine, no
 relapse group of 10% and 40%.
 
     # Impelment sensitivity analysis, once for figure
     sensitivity.analysis.log <- SensitivityAnalysis(observed.pp.table,c(.1,.4),exp(seq(0,2.3,by = .02)),exp(seq(0,-2.3,by = -.02)))
-
-    ## [1] 1000
-    ## [1] 2000
-    ## [1] 3000
-    ## [1] 4000
-    ## [1] 5000
-    ## [1] 6000
-    ## [1] 7000
-    ## [1] 8000
-    ## [1] 9000
-    ## [1] 10000
-    ## [1] 11000
-    ## [1] 12000
-    ## [1] 13000
-    ## [1] 14000
-    ## [1] 15000
-    ## [1] 16000
-    ## [1] 17000
-    ## [1] 18000
-    ## [1] 19000
-    ## [1] 20000
-    ## [1] 21000
-    ## [1] 22000
-    ## [1] 23000
-    ## [1] 24000
-    ## [1] 25000
-    ## [1] 26000
-
     sensitivity.analysis.log$prevalence.text <- paste(sensitivity.analysis.log$prevalence*100,"%",sep = "")
 
 The figure below shows a contour plot of the the results of the
