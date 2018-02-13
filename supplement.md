@@ -264,7 +264,7 @@ associations would be required.
 
     ## Warning in max(x): no non-missing arguments to max; returning -Inf
 
-![Figure 4](figures/Rplot.png)
+![Figure 4](figures/Rplot01.png)
 
 ##### References
 
