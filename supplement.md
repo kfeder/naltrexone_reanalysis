@@ -231,7 +231,7 @@ sensitivity analysis. Coloring distinguishes three important regions:
 
 1.  In the red region, stratifying on the unobserved confounder,
     naltrexone is preferred over buprenorphine, but the result is not
-    statistically significant. consistent with the author's results.  
+    statistically significant. This is consistent with the author's results.  
 2.  In the green region, the odds ratio "flips," and bupprenorphine is
     preferred over naltrexone, but the result is not statistically
     significant.
