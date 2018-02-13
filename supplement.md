@@ -12,9 +12,9 @@ to initiators is equivalent to conditioning on completing detox. If
 there is an unmeasured common cause of successful detox completion and
 relapse, than detoxification is a collider. Conditioning on a collider
 induces selection bias [(Hernan et al.,
-2004)](https://www.ncbi.nlm.nih.gov/pubmed/15308962). Here,
-conditioning on successful detoxification in one trial arm opens a
-"backdoor" association between naltrexone use and relapse.
+2004)](https://www.ncbi.nlm.nih.gov/pubmed/15308962). Here, conditioning
+on successful detoxification in one trial arm opens a "backdoor"
+association between naltrexone use and relapse.
 
 ![Figure 2](figures/Slide2.jpeg)
 
@@ -226,15 +226,17 @@ relapse group of 10% and 40%.
     sensitivity.analysis.log <- SensitivityAnalysis(observed.pp.table,c(.1,.4),exp(seq(0,2.3,by = .02)),exp(seq(0,-2.3,by = -.02)))
     sensitivity.analysis.log$prevalence.text <- paste(sensitivity.analysis.log$prevalence*100,"%",sep = "")
 
-The figure below shows a contour plot of the the results of the
-sensitivity analysis. Coloring distinguishes three important regions:
+The figure below shows a contour plot of the true (stratifed) odds ratio
+that results of the sensitivity analysis. Coloring distinguishes three
+important regions:
 
 1.  In the red region, stratifying on the unobserved confounder,
-    naltrexone is preferred over buprenorphine, but the result is not
-    statistically significant. This is consistent with the author's results.  
-2.  In the green region, the odds ratio "flips," and bupprenorphine is
-    preferred over naltrexone, but the result is not statistically
-    significant.
+    naltrexone is preferred over buprenorphine. The true odds ratio is
+    not statistically significant. This is consistent with the author's
+    results.  
+2.  In the green region, the odds ratio "flips," and buprenorphine is
+    preferred over naltrexone. The true odds ratio remains not
+    statistically significant.
 3.  In the blue region, buprenorhpine is statistically significantly
     preferred over naltrexone.
 
@@ -250,8 +252,9 @@ associations would be required.
       facet_grid(. ~ prevalence.text) +
       geom_raster(aes(fill = as.factor(pos.sig))) +
       geom_contour(aes(z = or.mh),colour = 'black') +
-      xlab("Odds Ratio Confounder with Treatment") +
-      ylab("Odds Ratio Confounder with Outcome") + 
+      xlab("Odds Ratio: Confounder with Naltrexone") +
+      ylab("Odds Ratio: Confounder with Relapse") + 
+      ggtitle("Sensitivity of Observed Association of\nNaltrexone with Relapse to Unmeasured Confounding") +
       scale_x_log10(breaks = seq(1,10,by = 1),sec.axis = sec_axis(~.,name = "Prevalence of Confounder in\nBuprenorphine-Taking non-Relapsers",breaks = NULL,labels = NULL)) + 
       scale_y_log10(breaks = seq(.1,1,by = .1)) +
       scale_fill_discrete(name = "Effect on True Odds Ratio") +
@@ -265,6 +268,8 @@ associations would be required.
     ## Warning in min(x): no non-missing arguments to min; returning Inf
 
     ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+![](supplement_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 
 ![Figure 4](figures/Rplot01.png)
 
