@@ -154,6 +154,8 @@ Here, we check that we can reproduce the authors' results.
     # Compute the 2 by 2 for the per protocol analysis
     observed.pp.table <- with(filter(dat,detoxed == 1),table(treatment.assigned,relapsed))
 
+Now we build functions to conduct the sensitivity analysis.
+
     #' This is a function for conducting the sensitivity analysis to...
     #' unmeasured confounding using data provided...
     #' and any user-chosen set of assumptions.
