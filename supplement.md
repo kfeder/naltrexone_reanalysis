@@ -264,7 +264,7 @@ associations would be required.
 
     ## Warning in max(x): no non-missing arguments to max; returning -Inf
 
-![](supplement_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![Figure 4](figures/Rplot.png)
 
 ##### References
 
