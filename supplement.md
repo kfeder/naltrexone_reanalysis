@@ -12,7 +12,7 @@ to initiators is equivalent to conditioning on completing detox. If
 there is an unmeasured common cause of successful detox completion and
 relapse, than detoxification is a collider. Conditioning on a collider
 induces selection bias [(Hernan et al.,
-2004!)](https://www.ncbi.nlm.nih.gov/pubmed/15308962). Here,
+2004)](https://www.ncbi.nlm.nih.gov/pubmed/15308962). Here,
 conditioning on successful detoxification in one trial arm opens a
 "backdoor" association between naltrexone use and relapse.
 
