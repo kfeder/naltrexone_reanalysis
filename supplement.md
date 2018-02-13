@@ -3,7 +3,7 @@
 The Directed Acyclic Graph (DAG) below shows the setup of the Lee et al.
 trial.
 
-![Figure 1](kfeder/naltrexone_reanalysis/figures/Slide1.jpeg)
+![Figure 1](figures/Slide1.jpeg)
 
 In per protocol analysis, we restrict to individuals who actually
 initiate their medication. For patients assigned naltrexone, this
@@ -16,14 +16,14 @@ induces selection bias [(Hernan et al.,
 conditioning on successful detoxification in one trial arm opens a
 "backdoor" association between naltrexone use and relapse.
 
-![Figure 2](kfeder/naltrexone_reanalysis/figures/Slide2.jpeg)
+![Figure 2](figures/Slide2.jpeg)
 
 The problem can be simplified by noting that, conditional on detox, the
 hypothetical unmeasured variable has become a confounder: it is
 associated with naltrexone use, it causes relapse, and it is not on the
 causal pathway.
 
-![Figure 3](kfeder/naltrexone_reanalysis/figures/Slide3.jpeg)
+![Figure 3](figures/Slide3.jpeg)
 
 The degree of bias in the observed association between naltrexone and
 relapse therefore depends on the strength of the association of the
