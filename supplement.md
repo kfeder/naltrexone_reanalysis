@@ -30,10 +30,10 @@ relapse therefore depends on the strength of the association of the
 unmeasured factor with naltrexone and relapse respectively. We can
 explore the extent of this bias by simulating a hypothetical confounding
 variable under different sets of assumptions about the strengths of the
-confounder's respective association with naltrexone and relapse. The
-ratio the odds ratio observed in the Lee et al. study to the "true" odds
-ratio that would have been observed in an unconfounded study is a
-measure of the degree of bias.
+confounder's respective association with naltrexone and relapse. We then
+can estimate the "true" odds ratio for the association of naltrexone for
+relapse, had this unmeasured confounder been successfully controlled
+for.
 
 To conduct this analysis, we make the following simplifying assumptions:
 
