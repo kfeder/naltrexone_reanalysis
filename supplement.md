@@ -246,8 +246,7 @@ use and reduced relapse risk could qualitatively change the association
 observed by Lee et al. When the confounding variable is rare, stronger
 associations would be required.
 
-    # This figure is a more comprehensive, but possibly less intuitive, way of presenting the..
-    # sensitivity analysis
+    # sensitivity analysis results
     ggplot(sensitivity.analysis.log,aes(x = or.ut,y = or.uy)) +
       facet_grid(. ~ prevalence.text) +
       geom_raster(aes(fill = as.factor(pos.sig))) +
