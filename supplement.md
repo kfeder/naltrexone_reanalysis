@@ -8,10 +8,14 @@ trial.
 In per protocol analysis, we restrict to individuals who actually
 initiate their medication. For patients assigned naltrexone, this
 requires detoxification. Thus, assignment causes detox, and restricting
-to initiators is equivalent to conditioning on completing detox. If
-there is an unmeasured common cause of successful detox completion and
-relapse, than detoxification is a collider. Conditioning on a collider
-induces selection bias [(Hernan et al.,
+to initiators is equivalent to conditioning on completing detox.
+Detoxification would be a collider if there is a common cause of
+successful detox completion and relapse that was not measured or not
+adjusted for in the analysis. For example, greater self regulation of
+inhibitory control could both increase the chances of successful detox
+and decrease the risk of relapse.
+
+Conditioning on a collider induces selection bias [(Hernan et al.,
 2004)](https://www.ncbi.nlm.nih.gov/pubmed/15308962). Here, conditioning
 on successful detoxification in one trial arm opens a "backdoor"
 association between naltrexone use and relapse.
@@ -19,57 +23,60 @@ association between naltrexone use and relapse.
 ![Figure 2](figures/Slide2.jpeg)
 
 The problem can be simplified by noting that, conditional on detox, the
-hypothetical unmeasured variable has become a confounder: it is
+hypothetical unmeasured variable behaves like a confounder: it is
 associated with naltrexone use, it causes relapse, and it is not on the
 causal pathway.
 
 ![Figure 3](figures/Slide3.jpeg)
 
 The degree of bias in the observed association between naltrexone and
-relapse therefore depends on the strength of the association of the
-unmeasured factor with naltrexone and relapse respectively. We can
-explore the extent of this bias by simulating a hypothetical confounding
-variable under different sets of assumptions about the strengths of the
-confounder's respective association with naltrexone and relapse. We then
-can estimate the "true" odds ratio for the association of naltrexone for
-relapse, had this unmeasured confounder been successfully controlled
+relapse therefore depends on the prevalence of the unmeasured variable
+in the naltexone and buprenorphine taking groups, and the association of
+the unmeasured variable with relapse. We can explore the extent of this
+bias by simulating a hypothetical unmeasured variable under different
+sets of assumptions about these parameters. We then can estimate the
+"true" relative risk of relapse comparing naltrexone initiators to
+buprenorphine initiatiors, had this unmeasured variable been adjusted
 for.
 
 To conduct this analysis, we make the following simplifying assumptions:
 
-1.  The unmeasured confounder is binary.
-2.  The association of the unmeasured confounder with naltrexone does
-    not depend on later relapse
+1.  The unmeasured variable is binary.
+2.  The association of the unmeasured variable with naltrexone does not
+    depend on later relapse among those who successfully initiate their
+    drugs
 3.  The association of the unmeasured confounder with relapse does not
-    depend on naltrexone use
+    depend on treatment assignment among those who successfully initiate
+    their drugs
 
-(2 and 3 are equivalent to "no effect modification.")
+We use the method of Lash and colleagues (2009), as implemented by the
+"episensr" package in R [(Haine,
+2018)](https://cran.r-project.org/web/packages/episensr/episensr.pdf).
+Specifically, we begin by reconstructing the 2-by-2 table for the
+per-protocol analysis. We then separate data into two tables, stratified
+on a hypothetical unmeasured variable associated with both naltrexone
+receipt an relapse. Stratified tables are constructed by first
+specificying:
 
-We then adopt a method similar to the one proposed by Arah and colleages
-[(2008)](https://www-sciencedirect-com.proxy1.library.jhu.edu/science/article/pii/S1047279708000914).
-Specifically, we reconstruct the 2-by-2 table for the per-protocol
-analysis. We then separate data into two tables, stratified on a
-hypothetical unmeasured variable associated with both naltrexone receipt
-an relpse. Stratified tables are constructed by first specificying:
+1.  The assumed prevalence of the unmeasured variable in the group that
+    received buprenorphine;
+2.  The assumed prevalence of the unmeasured variable in the group that
+    received naltrexone;
+3.  The assumed relative risk of relapse associated with the unmeasured
+    variable.
 
-1.  The assumed prevalence of the confounder in the group that received
-    buprenorphine and did not relapse;
-2.  The assumed odds ratio for the confounder-naltrexone association;
-3.  The assumed odds ratio for the confounder-relapse association.
-
-By specifying these quantities, we an calcuate the value of each cell of
-the stratified tables. Having now stratified on the unobserved
-confounder, we calculate a Matel-Haenszel odds ratio for the association
-of naltrexone with relapse, conditional on the unobserved confounder.
+By specifying these quantities, we can calcuate the value of each cell
+of the stratified tables. Having now stratified on the unobserved
+confounder, we calculate an adjusted risk ratio for the association of
+naltrexone with relapse, conditional on the unobserved variable.
 
 Implementation of this method is shown below.
-
-    # Re-analysis of Lee Naltrexone trial
 
     # You will need to install these packages if you do not have them already
     # install.packages(dplyr)
     # install.packages(ggplot2)
     # install.packages(tidyr)
+    # install.packages("episensr")
     library(dplyr)
 
     ## 
@@ -85,6 +92,7 @@ Implementation of this method is shown below.
 
     library(ggplot2)
     library(tidyr)
+    library(episensr)
 
 We begin by reproducing the Lee et al. dataset.
 
@@ -132,7 +140,7 @@ We begin by reproducing the Lee et al. dataset.
 
 Here, we check that we can reproduce the authors' results.
 
-    # Check we can reproduce the odds ratios reported in the study
+    # Check we can reproduce odds ratios
     # ITT
     fit.itt <- glm(relapsed ~ treatment.assigned,data = dat, family = 'binomial')
     exp(c(coef(fit.itt)[2],confint(fit.itt)[2,]))
@@ -143,7 +151,8 @@ Here, we check that we can reproduce the authors' results.
     ##           1.436084           1.024612           2.016922
 
     # PP
-    fit.pp <- glm(relapsed ~ treatment.assigned,data = filter(dat,detoxed == 1), family = 'binomial')
+    data.pp <- filter(dat,detoxed == 1)
+    fit.pp <- glm(relapsed ~ treatment.assigned,data = data.pp, family = 'binomial')
     exp(c(coef(fit.pp)[2],confint(fit.pp)[2,]))
 
     ## Waiting for profiling to be done...
@@ -151,114 +160,106 @@ Here, we check that we can reproduce the authors' results.
     ## treatment.assigned              2.5 %             97.5 % 
     ##          0.8653061          0.6005555          1.2463165
 
-    # Compute the 2 by 2 for the per protocol analysis
-    observed.pp.table <- with(filter(dat,detoxed == 1),table(treatment.assigned,relapsed))
+    # Estimate the crude relative risk (since Lee et al. worked on odds raito scale)
+    observed.pp.table <- with(data.pp,table(treatment.assigned,relapsed))
+    observed.pp.table
 
-Now we build functions to conduct the sensitivity analysis.
+    ##                   relapsed
+    ## treatment.assigned   0   1
+    ##                  0 120 150
+    ##                  1  98 106
 
-    #' This is a function for conducting the sensitivity analysis to...
-    #' unmeasured confounding using data provided...
-    #' and any user-chosen set of assumptions.
-    #' Start with: 
-    #' 1. observed data, 
-    #' 2. prevalence of confounder u in buprenorphine group that did not experience relpase, 
-    #' 3. association of confounder with naltrexone use
-    #' 4. association of confounder with relapse
-    Sens <- function(tab,prev.u.bup.last,or.ut,or.uy) {
-      # Sample size
-      n <- sum(tab)
-      
-      # Get prevalence of those where confounder is not present, v, among those who took bup and lasted
-      prev.v.bup.last <- 1 - prev.u.bup.last
-      
-      # Get prevalence of u and v in trex, last group from odds ratio
-      odds.u.bup.last <- prev.u.bup.last/(1-prev.u.bup.last)
-      odds.u.trex.last <- odds.u.bup.last*or.ut
-      prev.u.trex.last <- odds.u.trex.last/(1 + odds.u.trex.last)
-      prev.v.trex.last <- 1 - prev.u.trex.last
-      
-      # Get prevalence of u and v in bup, rellapse group from odds ratio
-      odds.u.bup.lapse <- odds.u.bup.last*or.uy
-      prev.u.bup.lapse <- odds.u.bup.lapse/(1 + odds.u.bup.lapse)
-      prev.v.bup.lapse <- 1 - prev.u.bup.lapse
-      
-      # Get prevalence of u and v in trex, relapse group from both odds ratios
-      odds.u.trex.lapse <- odds.u.bup.last*or.ut*or.uy
-      prev.u.trex.lapse <- odds.u.trex.lapse/(1 + odds.u.trex.lapse)
-      prev.v.trex.lapse <- 1 - prev.u.trex.lapse
-      
-      # Build two tables, with the data stratified on the confounder
-      tab.u <- tab*matrix(c(prev.u.bup.last,prev.u.bup.lapse,prev.u.trex.last,prev.u.trex.lapse),ncol = 2,byrow = TRUE)
-      tab.v <- tab*matrix(c(prev.v.bup.last,prev.v.bup.lapse,prev.v.trex.last,prev.v.trex.lapse),ncol = 2,byrow = TRUE)
-      
-      # Change data type to array, as needed for mantelhaen.test function
-      tab.stratified <- array(c(as.vector(tab.u),as.vector(tab.v)),c(2,2,2))
-      
-      # Compute mantel-haenszel odds ratio and test to get unconfounded odds ratio
-      test <- mantelhaen.test(tab.stratified)
-      c(prev.u.bup.last,or.ut,or.uy,or.mh = test$estimate,p.mh = test$p.value)
-      
-    }
+    observed.pp.table[2,2]/sum(observed.pp.table[2,])/(observed.pp.table[1,2]/sum(observed.pp.table[1,])) # Per protocol relative risk
 
-    #' This function implements the sensitivity analysis above, looping over...
-    #' the user's chosen values, and presenting the results in a concsise format
-    SensitivityAnalysis <- function(tab,prevalence,odds.ratios.ut,odds.ratios.uy){
-      combs <- expand.grid(prevalence,odds.ratios.ut,odds.ratios.uy)
-      out <- matrix(NA,nrow = nrow(combs),ncol = 5)
+    ## [1] 0.9352941
+
+Now we implement the sensitivity analysis for set of different exposure
+prevalences and strengths of association between the unmeasured variable
+and relapse. For each set of parameters, we estimate the extent of bias
+-- the percent difference between the observed risk ratio and the "true"
+risk ratio stratifying on confounders.
+
+    #' Now we conduct our sensitivity analysis. We follow the methods of Lash et al., 2009, as employed in the episensr package
+    #' The user chooses:
+    #' 1. The prevalence of the unmeasured variable in the exposed
+    #' 2. The prevalence of the unmeasured variable in the unexposed
+    #' 3. The relative risk of relapse associated with the unmeasured variable 
+    #' The analysis returns an estimate of the "standardized" relative risk, stratifying on the unmeasured variable
+
+    # Define the parameters over which we will conduct the sensitivity analysis
+
+    protective.effects <- seq(.1,.9,by = .01)
+    prevalence.control <- c(.2,.3,.4)
+    prevalence.treat <- c(.3,.4,.5)
+
+    # Function for looping over parameters, conducting the sensitivity analysis, and extracting
+    # ... the parameters of interest
+
+    SensitivityAnalysis <- function(case,exposed,rr.yu,u.control,u.treated){
+      # Parameters to be explored
+      combs <- expand.grid(rr.yu,u.treated,u.control)
+      names(combs) <- c("rr.yu","u.treated","u.control")
+      combs <- filter(combs,u.treated > u.control)
+      # Initialize output
+      out <- matrix(rep(NA,6*nrow(combs)),ncol = 6)
+      colnames(out) <- c("rr.yu","u.treated","u.control","true.rr","bias.degree","flip")
       for(i in 1:nrow(combs)){
-        out[i,] <- Sens(tab,combs[i,1],combs[i,2],combs[i,3])
+        fit <- confounders(case = case,
+                           exposed = exposed,
+                           type = "RR",
+                           bias_parms = combs[i,])
+        out[i,] <- c(
+          combs[i,1],
+          combs[i,2],
+          combs[i,3],
+          fit$adj.measures[[1,1]],
+          1 - fit$adj.measures[[1,2]],
+          as.numeric(fit$adj.measures[[1,1]] > 1)
+        )
       }
-      out <- as.data.frame(out)
-      names(out) <- c("prevalence","or.ut","or.uy","or.mh","p")
-      out$sig <- out$p < .05
-      out$pos <- out$or.mh >1
-      out$pos.sig <- ifelse(out$pos == FALSE,"Still Negative",ifelse(out$sig == FALSE,"Flips Positive","Flips Significant Positive")) %>% as.factor()
-      out$pos.sig <- relevel(out$pos.sig,"Still Negative")
-      out
+      as.data.frame(out)
     }
 
-We run the sensitivity analysis for a range of confounder-naltrexone
-odds ratios between 1 and 8; a range of confounder-relapse odds ratios
-between 1 and 1/8; and confounder prevalences in the buprenorphine, no
-relapse group of 10% and 40%.
 
-    # Impelment sensitivity analysis, once for figure
-    sensitivity.analysis.log <- SensitivityAnalysis(observed.pp.table,c(.1,.4),exp(seq(0,2.3,by = .02)),exp(seq(0,-2.3,by = -.02)))
-    sensitivity.analysis.log$prevalence.text <- paste(sensitivity.analysis.log$prevalence*100,"%",sep = "")
+    sens <-  SensitivityAnalysis(data.pp$relapsed,
+                        data.pp$treatment.assigned,
+                        protective.effects,
+                        prevalence.control,
+                        prevalence.treat)
+      
+    # Example for letter
+    names(sens)
 
-The figure below shows a contour plot of the true (stratifed) odds ratio
-that results of the sensitivity analysis. Coloring distinguishes three
-important regions:
+    ## [1] "rr.yu"       "u.treated"   "u.control"   "true.rr"     "bias.degree"
+    ## [6] "flip"
 
-1.  In the red region, stratifying on the unobserved confounder,
-    naltrexone is preferred over buprenorphine. The true odds ratio is
-    not statistically significant. This is consistent with the author's
-    results.  
-2.  In the green region, the odds ratio "flips," and buprenorphine is
-    preferred over naltrexone. The true odds ratio remains not
-    statistically significant.
-3.  In the blue region, buprenorhpine is statistically significantly
-    preferred over naltrexone.
+    filter(sens,u.treated == .4,u.control == .2,flip == 1) %>%
+      slice(which.min(true.rr))
 
-When the confounding variable is fairly prevalent in the sample, an
-unmeasured variable only modestly associated with increased naltrexone
-use and reduced relapse risk could qualitatively change the association
-observed by Lee et al. When the confounding variable is rare, stronger
-associations would be required.
+    ## # A tibble: 1 x 6
+    ##   rr.yu u.treated u.control  true.rr bias.degree  flip
+    ##   <dbl>     <dbl>     <dbl>    <dbl>       <dbl> <dbl>
+    ## 1  0.69       0.4       0.2 1.001491  0.06609808     1
 
-    # sensitivity analysis results
-    ggplot(sensitivity.analysis.log,aes(x = or.ut,y = or.uy)) +
-      facet_grid(. ~ prevalence.text) +
-      geom_raster(aes(fill = as.factor(pos.sig))) +
-      geom_contour(aes(z = or.mh),colour = 'black') +
-      xlab("Odds Ratio: Confounder with Naltrexone") +
-      ylab("Odds Ratio: Confounder with Relapse") + 
-      ggtitle("Sensitivity of Observed Association of\nNaltrexone with Relapse to Unmeasured Confounding") +
-      scale_x_log10(breaks = seq(1,10,by = 1),sec.axis = sec_axis(~.,name = "Prevalence of Confounder in\nBuprenorphine-Taking non-Relapsers",breaks = NULL,labels = NULL)) + 
-      scale_y_log10(breaks = seq(.1,1,by = .1)) +
-      scale_fill_discrete(name = "Effect on True Odds Ratio") +
-      theme_classic() +
-      theme(plot.title = element_text(hjust = .5),plot.subtitle = element_text(hjust = .5),legend.position = "bottom")
+    # Create plot of all sensitivity analysis results
+    ggplot(sens,aes(x = rr.yu,y = bias.degree,colour = factor(flip))) +
+      facet_grid(u.control ~ u.treated) +
+      geom_line() +
+      scale_x_reverse(
+        breaks = seq(0,1,by = .2),
+        sec.axis = sec_axis(~.,name = "Prevalence of Unmeasured Variable\nin Naltrexone Group",breaks = NULL,labels = NULL)) +
+      scale_y_continuous(
+        labels = scales::percent,
+        sec.axis = sec_axis(~.,name = "Prevalence of Unmeasured Variable\nin Buprenorphine Group",breaks = NULL,labels = NULL)) +
+      xlab("Relative Risk of Relapse Associated\nwith Unmeasured Variable") +
+      ylab("Degree of Bias (% Change Crude vs Adjusted RR)") +
+      scale_colour_manual(
+        name = "Qualitative Conclusion",
+        values = c("green","red"),
+        breaks = c(0,1),
+        labels = c("Naltrexone Preferred","Buprenorphine Preferred")
+      ) +
+      theme_bw()
 
     ## Warning in min(x): no non-missing arguments to min; returning Inf
 
@@ -268,17 +269,101 @@ associations would be required.
 
     ## Warning in max(x): no non-missing arguments to max; returning -Inf
 
-![](supplement_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
 
-![Figure 4](figures/Rplot01.png)
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+    ## Warning in min(x): no non-missing arguments to min; returning Inf
+
+    ## Warning in max(x): no non-missing arguments to max; returning -Inf
+
+![](supplement_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+
+Figure 1. Relative Risk of Relapse Comparing Naltrexone and Buprenorphine: Sensitivity of Observed Result to Unmeasured Confounding
+-----------------------------------------------------------------------------------------------------------------------------------
+
+![Figure 4](figures/Rplot02.png)
+
+As shown above, if prevalence of the unmeasured variable is similar
+between groups, it would need to cause a fairly strong reduction in
+relapse to qualitatively change the conclusion in Lee et al. However, if
+the prevalene of the unmeasured variable is quite different between
+groups -- as could plausibly be the case here, since failure to initate
+naltrexone was five times more common than failure to initiate
+buprenorphine -- then it would only need to modestly reduce the risk the
+relapse to qualitatively change the study conclusions. If the unmeasured
+variable had a strong effect on relapse, the observed relative risk
+could be biased by more than 30%.
 
 ##### References
+
+Denis Haine (2017). episensr: Basic Sensitivity Analysis of
+Epidemiological Results. R package version 0.9.2.
+<https://CRAN.R-project.org/package=episensr>
 
 Hernán, M. A., Hernández-Díaz, S., & Robins, J. M. (2004). A structural
 approach to selection bias. Epidemiology (Cambridge, Mass.), 15(5),
 615–625.
 
-Arah, O. A., Chiba, Y., & Greenland, S. (2008). Bias formulas for
-external adjustment and sensitivity analysis of unmeasured confounders.
-Annals of Epidemiology, 18(8), 637–646.
-<https://doi.org/10.1016/j.annepidem.2008.04.003>
+Lash, T. L., Fox, M. P., & Fink, A. K. (2011). Applying Quantitative
+Bias Analysis to Epidemiologic Data. Springer Science & Business Media.
+
+VanderWeele, T. J. (2010). Bias formulas for sensitivity analysis for
+direct and indirect effects. Epidemiology (Cambridge, Mass.), 21(4),
+540–551. <https://doi.org/10.1097/EDE.0b013e3181df191c>
