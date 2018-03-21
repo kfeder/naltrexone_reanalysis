@@ -173,11 +173,11 @@ Here, we check that we can reproduce the authors' results.
 
     ## [1] 0.9352941
 
-Now we implement the sensitivity analysis for set of different exposure
-prevalences and strengths of association between the unmeasured variable
-and relapse. For each set of parameters, we estimate the extent of bias
--- the percent difference between the observed risk ratio and the "true"
-risk ratio stratifying on unobserved variable.
+Now we implement the sensitivity analysis for a set of different
+exposure prevalences and strengths of association between the unmeasured
+variable and relapse. For each set of parameters, we estimate the extent
+of bias -- the percent difference between the observed risk ratio and
+the "true" risk ratio stratifying on the unobserved variable.
 
     #' Now we conduct our sensitivity analysis. We follow the methods of Lash et al., 2009, as employed in the episensr package
     #' The user chooses:
