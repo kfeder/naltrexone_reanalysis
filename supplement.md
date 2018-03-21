@@ -264,16 +264,16 @@ Figure 1. Relative Risk of Relapse Comparing Naltrexone and Buprenorphine: Sensi
 
 ![Figure 4](figures/Rplot02.png)
 
-As shown above, if prevalence of the unmeasured variable is similar
-between groups, it would need to cause a fairly strong reduction in
-relapse to qualitatively change the conclusion in Lee et al. However, if
-the prevalene of the unmeasured variable is quite different between
-groups -- as could plausibly be the case here, since failure to initate
-naltrexone was five times more common than failure to initiate
-buprenorphine -- then it would only need to modestly reduce the risk the
-relapse to qualitatively change the study conclusions. If the unmeasured
-variable had a strong effect on relapse, the observed relative risk
-could be biased by more than 30%.
+As shown above, if the prevalence of the unmeasured variable is similar
+between groups, the variable would need to cause a fairly strong
+reduction in relapse to qualitatively change the conclusion in Lee et
+al. However, if the prevalene of the unmeasured variable is quite
+different between groups -- as could plausibly be the case here, since
+failure to initate naltrexone was five times more common than failure to
+initiate buprenorphine -- then it would only need to modestly reduce the
+risk the relapse to qualitatively change the study conclusions. If the
+unmeasured variable had a strong effect on relapse, the observed
+relative risk could be biased by more than 30%.
 
 ##### References
 
