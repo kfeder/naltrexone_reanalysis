@@ -1,4 +1,5 @@
-### Comparative Effectiveness of Naltrexone and Buprenorphine: Letter Supplement
+Comparative Effectiveness of Naltrexone and Buprenorphine: Letter Supplement
+============================================================================
 
 The Directed Acyclic Graph (DAG) below shows the setup of the Lee et al.
 trial.
@@ -259,8 +260,7 @@ the "true" risk ratio stratifying on the unobserved variable.
 
 ![](supplement_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
-Figure 1. Relative Risk of Relapse Comparing Naltrexone and Buprenorphine: Sensitivity of Observed Result to Unmeasured Variables
----------------------------------------------------------------------------------------------------------------------------------
+### Figure 1. Relative Risk of Relapse Comparing Naltrexone and Buprenorphine: Sensitivity of Observed Result to Unmeasured Variables
 
 ![Figure 4](figures/Rplot02.png)
 
