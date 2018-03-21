@@ -45,7 +45,7 @@ To conduct this analysis, we make the following simplifying assumptions:
 2.  The association of the unmeasured variable with naltrexone does not
     depend on later relapse among those who successfully initiate their
     drugs
-3.  The association of the unmeasured confounder with relapse does not
+3.  The association of the unmeasured variable with relapse does not
     depend on treatment assignment among those who successfully initiate
     their drugs
 
@@ -67,7 +67,7 @@ specificying:
 
 By specifying these quantities, we can calcuate the value of each cell
 of the stratified tables. Having now stratified on the unobserved
-confounder, we calculate an adjusted risk ratio for the association of
+variable, we calculate an adjusted risk ratio for the association of
 naltrexone with relapse, conditional on the unobserved variable.
 
 Implementation of this method is shown below.
@@ -177,7 +177,7 @@ Now we implement the sensitivity analysis for set of different exposure
 prevalences and strengths of association between the unmeasured variable
 and relapse. For each set of parameters, we estimate the extent of bias
 -- the percent difference between the observed risk ratio and the "true"
-risk ratio stratifying on confounders.
+risk ratio stratifying on unobserved variable.
 
     #' Now we conduct our sensitivity analysis. We follow the methods of Lash et al., 2009, as employed in the episensr package
     #' The user chooses:
@@ -335,8 +335,8 @@ risk ratio stratifying on confounders.
 
 ![](supplement_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
-Figure 1. Relative Risk of Relapse Comparing Naltrexone and Buprenorphine: Sensitivity of Observed Result to Unmeasured Confounding
------------------------------------------------------------------------------------------------------------------------------------
+Figure 1. Relative Risk of Relapse Comparing Naltrexone and Buprenorphine: Sensitivity of Observed Result to Unmeasured Variables
+---------------------------------------------------------------------------------------------------------------------------------
 
 ![Figure 4](figures/Rplot02.png)
 
