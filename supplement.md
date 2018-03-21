@@ -271,7 +271,7 @@ al. However, if the prevalene of the unmeasured variable is quite
 different between groups -- as could plausibly be the case here, since
 failure to initate naltrexone was five times more common than failure to
 initiate buprenorphine -- then it would only need to modestly reduce the
-risk the relapse to qualitatively change the study conclusions. If the
+risk of relapse to qualitatively change the study conclusions. If the
 unmeasured variable had a strong effect on relapse, the observed
 relative risk could be biased by more than 30%.
 
