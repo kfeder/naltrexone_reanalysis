@@ -179,14 +179,18 @@ assumptions about the unmeasured variable:
 - We assume that the unmeasured variable reduces the risk of relapse by
 somewhere between 10% and 90%, and examine all protective effects
 between these extremes in 1 percentage point increments (e.g., 10%
-reduction in risk, 11% reduction in risk, etc.). - We assume the
-prevalence of the unmeasured variable in the buprenorphine-initiator
-group was either 20%, 30%, or 40%; and the prevalence of the unmeasured
-variable in the naltrexone-initiator group was 30%, 40%, or 50%. Only
-cases where the unmeasured variable is more prevalent in the naltrexone
-group are examined. This is consistent with our concern that
-differential non-initiation between the groups caused a protective
-factor to be more prevalent among naltrexone-initiators.
+reduction in risk, 11% reduction in risk, etc.).
+
+-   We assume the prevalence of the unmeasured variable in the
+    buprenorphine-initiator group was either 20%, 30%, or 40%; and the
+    prevalence of the unmeasured variable in the naltrexone-initiator
+    group was 30%, 40%, or 50%. Only cases where the unmeasured variable
+    is more prevalent in the naltrexone group are examined. This is
+    consistent with our concern that differential non-initiation between
+    the groups caused a protective factor to be more prevalent among
+    naltrexone-initiators.
+
+<!-- -->
 
     #' Now we conduct our sensitivity analysis. We follow the methods of Lash et al., 2009, as employed in the episensr package
     #' The user chooses:
