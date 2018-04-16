@@ -12,9 +12,9 @@ requires detoxification. Thus, assignment causes detox, and restricting
 to initiators is equivalent to conditioning on completing detox.
 Detoxification would be a collider if there is a common cause of
 successful detox completion and relapse that was not measured or not
-adjusted for in the analysis. For example, greater self regulation of
-inhibitory control could both increase the chances of successful detox
-and decrease the risk of relapse.
+adjusted for in the analysis. For example, greater capacity for
+self-regulation or inhibitory control could both increase the chances of
+successful detox and decrease the risk of relapse.
 
 Conditioning on a collider induces selection bias [(Hernan et al.,
 2004)](https://www.ncbi.nlm.nih.gov/pubmed/15308962). Here, conditioning
@@ -32,13 +32,13 @@ causal pathway.
 
 The degree of bias in the observed association between naltrexone and
 relapse therefore depends on the prevalence of the unmeasured variable
-in the naltexone and buprenorphine taking groups, and the association of
-the unmeasured variable with relapse. We can explore the extent of this
-bias by simulating a hypothetical unmeasured variable under different
-sets of assumptions about these parameters. We then can estimate the
-"true" relative risk of relapse comparing naltrexone initiators to
-buprenorphine initiatiors, had this unmeasured variable been adjusted
-for.
+in the naltrexone and buprenorphine taking groups, and the association
+of the unmeasured variable with relapse. We can explore the extent of
+this bias by simulating a hypothetical unmeasured variable under
+different sets of assumptions about these parameters. We then can
+estimate the "true" relative risk of relapse comparing naltrexone
+initiators to buprenorphine initiatiors, had this unmeasured variable
+been adjusted for.
 
 To conduct this analysis, we make the following simplifying assumptions:
 
@@ -174,11 +174,19 @@ Here, we check that we can reproduce the authors' results.
 
     ## [1] 0.9352941
 
-Now we implement the sensitivity analysis for a set of different
-exposure prevalences and strengths of association between the unmeasured
-variable and relapse. For each set of parameters, we estimate the extent
-of bias -- the percent difference between the observed risk ratio and
-the "true" risk ratio stratifying on the unobserved variable.
+Now we implement the sensitivity analysis under different sets of
+assumptions about the unmeasured variable:  
+- We assume that the unmeasured variable reduces the risk of relapse by
+somewhere between 10% and 90%, and examine all protective effects
+between these extremes in 1 percentage point increments (e.g., 10%
+reduction in risk, 11% reduction in risk, etc.). - We assume the
+prevalence of the unmeasured variable in the buprenorphine-initiator
+group was either 20%, 30%, or 40%; and the prevalence of the unmeasured
+variable in the naltrexone-initiator group was 30%, 40%, or 50%. Only
+cases where the unmeasured variable is more prevalent in the naltrexone
+group are examined. This is consistent with our concern that
+differential non-initiation between the groups caused a protective
+factor to be more prevalent among naltrexone-initiators.
 
     #' Now we conduct our sensitivity analysis. We follow the methods of Lash et al., 2009, as employed in the episensr package
     #' The user chooses:
@@ -267,13 +275,37 @@ the "true" risk ratio stratifying on the unobserved variable.
 As shown above, if the prevalence of the unmeasured variable is similar
 between groups, the variable would need to cause a fairly strong
 reduction in relapse to qualitatively change the conclusion in Lee et
-al. However, if the prevalene of the unmeasured variable is quite
-different between groups -- as could plausibly be the case here, since
-failure to initate naltrexone was five times more common than failure to
-initiate buprenorphine -- then it would only need to modestly reduce the
+al. However, if the prevalence of the unmeasured variable is quite
+different between groups then it would only need to modestly reduce the
 risk of relapse to qualitatively change the study conclusions. If the
 unmeasured variable had a strong effect on relapse, the observed
 relative risk could be biased by more than 30%.
+
+It is encouraging that none of the clinical characteristics presented by
+Lee et al. in Table 1 differed between naltrexone-initiators and
+buprenorphine-initiators by more than 10 percentage points.
+Nevertheless, we think the scenarios explored in our analysis -- an
+unmeasured variable that differs by much more than 10 percentage points
+between groups -- remains plausible. This is because failure to initate
+naltrexone was five times more common than failure to initiate
+buprenorphine, and also because none of the clinical characteristics
+examined is a clear proxy for the uneasured characteristic of interest
+-- a participant's latent capacity to stop misusing opioids.
+
+Finally, we must emphasize that our point is not that naltrexone is
+necessarily inferior to buprenorphine. Indeed, as Lee and colleagues
+note, Tanum and colleagues
+[(2017)](https://doi.org/10.1001/jamapsychiatry.2017.3206) found that
+naltrexone was not inferior to buprenorphine in a randomized trial of
+Danish patients who had already completed a more lengthy period of
+detoxification. Our point is only that the present per-protocol analysis
+of treatment efficacy following initiation should be interpreted with
+the same caution applied to any other observational study. This is
+particularly true given the conclusions of Lee and colleagues' main
+intent-to treat-analysis: that among patients who attempt to initiate
+medication-assisted treatment while actively using opioids, asignment to
+naltrexone treatment increases risk of relapse as compared to assignment
+to buprenorphine.
 
 ##### References
 
@@ -287,6 +319,12 @@ approach to selection bias. Epidemiology (Cambridge, Mass.), 15(5),
 
 Lash, T. L., Fox, M. P., & Fink, A. K. (2011). Applying Quantitative
 Bias Analysis to Epidemiologic Data. Springer Science & Business Media.
+
+Tanum, L., Solli, K. K., Latif, Z.-H., Benth, J. Š., Opheim, A.,
+Sharma-Haase, K., … Kunøe, N. (2017). Effectiveness of Injectable
+Extended-Release Naltrexone vs Daily Buprenorphine-Naloxone for Opioid
+Dependence: A Randomized Clinical Noninferiority Trial. JAMA Psychiatry,
+74(12), 1197–1205. <https://doi.org/10.1001/jamapsychiatry.2017.3206>
 
 VanderWeele, T. J. (2010). Bias formulas for sensitivity analysis for
 direct and indirect effects. Epidemiology (Cambridge, Mass.), 21(4),
