@@ -288,9 +288,9 @@ relative risk could be biased by more than 30%.
 It is encouraging that none of the clinical characteristics presented by
 Lee et al. in Table 1 differed between naltrexone-initiators and
 buprenorphine-initiators by more than 10 percentage points.
-Nevertheless, we think the scenarios explored in our analysis -- an
-unmeasured variable that differs by much more than 10 percentage points
-between groups -- remains plausible. This is because failure to initate
+Nevertheless, we think the scenarios explored in our analysis --
+unmeasured variables that differ by much more than 10 percentage points
+between groups -- remain plausible. This is because failure to initate
 naltrexone was five times more common than failure to initiate
 buprenorphine, and also because none of the clinical characteristics
 examined is a clear proxy for the uneasured characteristic of interest
