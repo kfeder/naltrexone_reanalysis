@@ -6,7 +6,7 @@ trial.
 
 ![Figure 1](figures/Slide1.jpeg)
 
-In per protocol analysis, we restrict to individuals who actually
+In per-protocol analysis, we restrict to individuals who actually
 initiate their medication. For patients assigned naltrexone, this
 requires detoxification. Thus, assignment causes detox, and restricting
 to initiators is equivalent to conditioning on completing detox.
@@ -43,10 +43,7 @@ been adjusted for.
 To conduct this analysis, we make the following simplifying assumptions:
 
 1.  The unmeasured variable is binary.
-2.  The association of the unmeasured variable with naltrexone does not
-    depend on later relapse among those who successfully initiate their
-    drugs
-3.  The association of the unmeasured variable with relapse does not
+2.  The association of the unmeasured variable with relapse does not
     depend on treatment assignment among those who successfully initiate
     their drugs
 
